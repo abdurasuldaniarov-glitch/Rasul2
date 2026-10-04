@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ky"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mashina KG</title>
+<style>
+:root{--bg:#fff;--tx:#111;--mu:#666;--ln:#e6e6e6;--cd:#fafafa;--rd:#e11d2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0e0f;--tx:#f3f3f3;--mu:#a0a0a0;--ln:#2a2a2c;--cd:#171719}}
+:root[data-theme="dark"]{--bg:#0e0e0f;--tx:#f3f3f3;--mu:#a0a0a0;--ln:#2a2a2c;--cd:#171719}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--ln);z-index:5}
+nav{max-width:1100px;margin:auto;padding:12px 16px;display:flex;gap:6px 16px;align-items:center;flex-wrap:wrap}
+.logo{font-weight:800;font-size:22px;letter-spacing:-.5px;margin-right:auto}.logo b{color:var(--rd)}
+nav a.l{color:var(--mu);font-weight:500;cursor:pointer}nav a.l:hover{color:var(--tx)}
+main{max-width:1100px;margin:auto;padding:16px}
+.btn{background:var(--rd);color:#fff;border:0;border-radius:10px;padding:12px 20px;font:600 15px inherit;cursor:pointer;display:inline-block;text-align:center}
+.btn.o{background:none;color:var(--tx);border:1px solid var(--ln)}.btn.sm{padding:7px 12px;font-size:13px}.btn.dk{background:#111}
+.hero{padding:40px 0 20px}.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 8px;letter-spacing:-1px}.hero p{color:var(--mu);margin:0 0 20px}
+.box{background:var(--cd);border:1px solid var(--ln);border-radius:16px;padding:16px}
+.g{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+label{font-size:13px;color:var(--mu);display:block;margin-bottom:3px}
+h2{margin:28px 0 12px;font-size:22px}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{border:1px solid var(--ln);border-radius:16px;overflow:hidden;background:var(--bg);position:relative}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--cd);display:block}
+.card .b{padding:12px 14px}.card h3{margin:0;font-size:17px}.mu{color:var(--mu);font-size:14px}.pr{font-weight:800;font-size:19px;margin:6px 0 10px}
+.fav{position:absolute;top:8px;right:8px;background:#fffc;border:0;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer}
+.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--ln)}.tag.ok{background:#16a34a22;color:#16a34a}.tag.pe{background:#f59e0b22;color:#d97706}.tag.bl{background:#e11d2e22;color:var(--rd)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gal img.m{width:100%;max-height:520px;object-fit:contain;background:var(--cd);border-radius:16px}
+.th{display:flex;gap:8px;overflow-x:auto;margin-top:8px}.th img{width:80px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
+.sp{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}.sp div{padding:8px 0;border-bottom:1px solid var(--ln)}
+.two{display:grid;gap:24px;grid-template-columns:1.3fr 1fr}@media(max-width:800px){.two{grid-template-columns:1fr}}
+.auth{max-width:380px;margin:30px auto}.auth .g{grid-template-columns:1fr}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--ln)}
+.tw{overflow-x:auto}.pv{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.pv img{width:64px;height:64px;object-fit:cover;border-radius:8px}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 18px;border-radius:10px;display:none;z-index:9}
+.call{display:flex;gap:10px;margin-top:16px}.call a{flex:1;padding:16px;font-size:17px}
+</style></head><body>
+<header><nav id="nav"></nav></header><main id="app"></main><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const K='mashina_kg_db_v2',SK='mashina_kg_sess';
+const BM={Toyota:['Camry 70','Camry 55','Corolla','RAV4','Land Cruiser 200','Prius','Highlander','Alphard'],Honda:['Fit','Civic','CR-V','Accord','Odyssey','Stepwgn'],Mercedes:['E-Class','C-Class','S-Class','GLE','Sprinter','ML 320'],BMW:['3 Series','5 Series','X5','X3','7 Series'],Lexus:['RX 350','LX 570','GX 460','ES 350'],Hyundai:['Sonata','Elantra','Tucson','Santa Fe'],Kia:['Optima','Sportage','Rio','K5'],Nissan:['X-Trail','Qashqai','Teana','Juke'],Subaru:['Forester','Outback','Legacy'],Volkswagen:['Passat','Golf','Tiguan'],Audi:['A6','A4','Q7'],Chevrolet:['Cobalt','Lacetti','Nexia'],Daewoo:['Matiz','Nexia'],Ford:['Focus','Transit','Explorer'],Mazda:['CX-5','Mazda 6','Demio'],Lada:['Vesta','Priora','Niva']};
+const CITIES=['Бишкек','Ош','Жалал-Абад','Каракол','Токмок','Кара-Балта','Нарын','Талас','Баткен','Баткен','Балыкчы','Кант','Кара-Суу','Кочкор-Ата'].filter((v,i,a)=>a.indexOf(v)===i);
+const BODY=['Седан','Хэтчбек','Универсал','Кроссовер','Внедорожник','Минивэн','Пикап','Купе','Микроавтобус'],GEAR=['Автомат','Механика','Вариатор','Робот'],FUEL=['Бензин','Дизель','Газ/Бензин','Гибрид','Электро'],COND=['Жаңы','Абдан жакшы','Жакшы','Орточо','Оңдоо керек'],COL=['Ак','Кара','Күмүш','Боз','Кызыл','Көк','Жашыл','Сары','Күрөң'];
+const HEX={Ак:'#f4f4f4',Кара:'#1c1c1e',Күмүш:'#c0c4ca',Боз:'#7b8088',Кызыл:'#d3202f',Көк:'#2456b8',Жашыл:'#2f7d4f',Сары:'#f2c230',Күрөң:'#7a4b2a'};
+const BP={s:['M90 300Q90 262 130 256L200 250L250 190Q262 178 285 178L390 178Q412 178 428 194L465 248L525 256Q556 262 556 300L556 318L90 318Z','M262 200L228 246L322 246L322 194L285 194Q270 194 262 200Z','M338 194L338 246L450 246L418 206Q408 194 392 194Z',90,536],
+h:['M100 300Q100 262 135 256L205 250L245 190Q258 178 280 178L440 178Q462 178 470 200L490 250Q520 258 530 290L530 318L100 318Z','M256 198L226 246L330 246L330 194L275 194Q262 194 256 198Z','M346 194L346 246L474 246L458 206Q452 194 436 194Z',100,510],
+c:['M90 300Q90 250 130 244L190 240L212 178Q218 168 238 168L440 168Q458 168 466 182L500 240L530 246Q556 252 556 300L556 322L90 322Z','M232 186L210 238L326 238L326 184L246 184Q236 184 232 186Z','M342 184L342 238L484 238L456 190Q450 184 438 184Z',90,536]};
+function carImg(col,t,f){const p=BP[t]||BP.s,c=HEX[col]||'#ddd',bg=f?['#e9eef5','#cfd8e6']:['#f3f3f3','#dcdcdc'];
+return 'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs><rect width="640" height="480" fill="url(#g)"/><ellipse cx="322" cy="366" rx="250" ry="14" fill="#0002"/><g transform="${f?'translate(640,0) scale(-1,1)':''}"><path d="${p[0]}" fill="${c}" stroke="#0003" stroke-width="3"/><path d="${p[1]}" fill="#bfe0f2"/><path d="${p[2]}" fill="#bfe0f2"/><rect x="${p[4]}" y="272" width="20" height="10" rx="3" fill="#ffe27a"/><rect x="${p[3]}" y="272" width="12" height="10" rx="3" fill="#e11d2e"/>${[185,470].map(x=>`<circle cx="${x}" cy="322" r="42" fill="#1a1a1a"/><circle cx="${x}" cy="322" r="22" fill="#cfcfcf"/><circle cx="${x}" cy="322" r="8" fill="#888"/>`).join('')}</g></svg>`)}
+let db=JSON.parse(localStorage.getItem(K)||'null');
+function seed(){let id=1;const Brands=[],Models=[];for(const b in BM){const bi=id++;Brands.push({id:bi,name:b});BM[b].forEach(m=>Models.push({id:id++,brandId:bi,name:m}))}
+  const d={Users:[{id:1,name:'Админ',phone:'0700000000',password:'admin123',role:'admin',blocked:false,created:Date.now()}],Cars:[],CarImages:[],Favorites:[],Brands,Models,Cities:CITIES.map((n,i)=>({id:i+1,name:n})),seq:100};
+ [['Toyota','Camry 70',2020,2350000,85000,'Автомат','Бишкек','Ак','s','Седан'],['Honda','Fit',2012,780000,142000,'Вариатор','Ош','Күмүш','h','Хэтчбек'],['Mercedes','E-Class',2015,1450000,120000,'Автомат','Бишкек','Кара','s','Седан'],['Lexus','LX 570',2018,7900000,76000,'Автомат','Бишкек','Ак','c','Внедорожник'],['Toyota','RAV4',2019,3100000,58000,'Автомат','Каракол','Кызыл','c','Кроссовер'],['Hyundai','Sonata',2017,1250000,98000,'Автомат','Жалал-Абад','Көк','s','Седан'],['Subaru','Forester',2014,1150000,163000,'Вариатор','Ош','Жашыл','c','Кроссовер'],['Kia','Rio',2018,890000,71000,'Механика','Токмок','Боз','s','Седан']].forEach((c,i)=>{d.Cars.push({id:i+1,userId:1,brand:c[0],model:c[1],year:c[2],price:c[3],km:c[4],engine:'2.5',gear:c[5],fuel:'Бензин',body:c[9],color:c[7],city:c[6],cond:'Абдан жакшы',desc:'Демо жарыя. Жакшы абалда, документтери тыкан.',phone:'0700123456',status:'approved',created:Date.now()-i*1e5});[0,1].forEach(k=>d.CarImages.push({id:i*2+k+1,carId:i+1,src:carImg(c[7],c[8],k)}))});return d}
+if(!db){db=seed();save()}
+function save(){try{localStorage.setItem(K,JSON.stringify(db));return true}catch(e){toast('Сактоо мүмкүн болгон жок (эс тутум толду). Сүрөттөрдү азайтыңыз.');return false}}
+const nid=()=>++db.seq;
+let me=()=>db.Users.find(u=>u.id==localStorage.getItem(SK));
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',3000)}
+const fmt=n=>Number(n).toLocaleString('ru-RU').replace(/,/g,' ');
+const imgs=id=>db.CarImages.filter(i=>i.carId==id);
+const opt=(a,sel,ph)=>(ph!=null?`<option value="">${ph}</option>`:'')+a.map(x=>`<option${x==sel?' selected':''}>${esc(x)}</option>`).join('');
+const mods=b=>db.Models.filter(m=>m.brandId==(db.Brands.find(x=>x.name==b)||{}).id).map(m=>m.name);
+function navb(){const u=me();$('#nav').innerHTML=`<a class="logo" href="#/">Mashina <b>KG</b></a><a class="l" href="#/search">Машина издөө</a><a class="l" href="#/add">Машина сатуу</a>`+(u?`<a class="l" href="#/cab">${esc(u.name)}</a>${u.role=='admin'?'<a class="l" href="#/admin">Админ</a>':''}<a class="l" onclick="logout()">Чыгуу</a>`:`<a class="l" href="#/login">Кирүү</a><a class="btn sm" href="#/reg">Катталуу</a>`)}
+function logout(){localStorage.removeItem(SK);location.hash='#/';route()}
+function filterBox(f){return `<div class="box"><div class="g">
+<div><label>Марка</label><select id="fb" onchange="fillM()">${opt(Object.keys(BM),f.brand,'Баары')}</select></div>
+<div><label>Модель</label><select id="fm">${opt(f.brand?mods(f.brand):[],f.model,'Баары')}</select></div>
+<div><label>Баа (сом): от</label><input id="pmin" type="number" value="${f.pmin||''}"></div><div><label>Баа: до</label><input id="pmax" type="number" value="${f.pmax||''}"></div>
+<div><label>Жыл: от</label><input id="ymin" type="number" value="${f.ymin||''}"></div><div><label>Жыл: до</label><input id="ymax" type="number" value="${f.ymax||''}"></div>
+<div><label>Шаар</label><select id="fc">${opt(CITIES,f.city,'Баары')}</select></div>
+<div><label>Кузов</label><select id="fbd">${opt(BODY,f.body,'Баары')}</select></div>
+<div><label>Коробка</label><select id="fg">${opt(GEAR,f.gear,'Баары')}</select></div>
+<div><label>Күйүүчү май</label><select id="ff">${opt(FUEL,f.fuel,'Баары')}</select></div>
+<div><label>Пробег: до (км)</label><input id="kmax" type="number" value="${f.kmax||''}"></div>
+<div><label>Сортировка</label><select id="so"><option value="new">Жаңы жарыялар</option><option value="asc"${f.so=='asc'?' selected':''}>Арзанынан кымбатына</option><option value="desc"${f.so=='desc'?' selected':''}>Кымбатынан арзанына</option></select></div>
+</div><div style="margin-top:12px"><button class="btn" onclick="doSearch()">Издөө</button></div></div>`}
+function fillM(){$('#fm').innerHTML=opt(mods($('#fb').value),'','Баары')}
+function doSearch(){const g=id=>$(id).value,p=new URLSearchParams();[['brand','#fb'],['model','#fm'],['pmin','#pmin'],['pmax','#pmax'],['ymin','#ymin'],['ymax','#ymax'],['city','#fc'],['body','#fbd'],['gear','#fg'],['fuel','#ff'],['kmax','#kmax'],['so','#so']].forEach(([k,i])=>g(i)&&p.set(k,g(i)));location.hash='#/search?'+p}
+function card(c){const u=me(),fv=u&&db.Favorites.some(f=>f.userId==u.id&&f.carId==c.id),im=imgs(c.id)[0];
+return `<div class="card"><a href="#/car/${c.id}"><img loading="lazy" src="${im?im.src:''}" alt=""></a><button class="fav" onclick="fav(${c.id})">${fv?'❤️':'🤍'}</button><div class="b"><h3>${esc(c.brand)} ${esc(c.model)}</h3><div class="mu">${c.year}-жыл • ${fmt(c.km)} км • ${esc(c.gear)}</div><div class="mu">📍 ${esc(c.city)}</div><div class="pr">${fmt(c.price)} сом</div><a class="btn sm o" href="#/car/${c.id}">Толук маалымат</a></div></div>`}
+function fav(id){const u=me();if(!u){toast('Адегенде кириңиз');location.hash='#/login';return}const i=db.Favorites.findIndex(f=>f.userId==u.id&&f.carId==id);i>=0?db.Favorites.splice(i,1):db.Favorites.push({id:nid(),userId:u.id,carId:id});save();route()}
+const live=()=>db.Cars.filter(c=>c.status=='approved'&&!(db.Users.find(u=>u.id==c.userId)||{}).blocked);
+function home(){const l=live().sort((a,b)=>b.created-a.created).slice(0,8);return `<div class="hero"><h1>Кыргызстанда машина сатыңыз жана сатып алыңыз</h1><p>Жарыяны бир нече мүнөттө жарыялаңыз — сатуучу менен түз байланышыңыз.</p></div>${filterBox({})}<h2>Жаңы жарыялар</h2><div class="cards">${l.map(card).join('')||'<p class="mu">Азырынча жарыя жок.</p>'}</div>`}
+function search(q){const f=Object.fromEntries(new URLSearchParams(q));let l=live().filter(c=>(!f.brand||c.brand==f.brand)&&(!f.model||c.model==f.model)&&(!f.pmin||c.price>=+f.pmin)&&(!f.pmax||c.price<=+f.pmax)&&(!f.ymin||c.year>=+f.ymin)&&(!f.ymax||c.year<=+f.ymax)&&(!f.city||c.city==f.city)&&(!f.body||c.body==f.body)&&(!f.gear||c.gear==f.gear)&&(!f.fuel||c.fuel==f.fuel)&&(!f.kmax||c.km<=+f.kmax));
+l.sort(f.so=='asc'?(a,b)=>a.price-b.price:f.so=='desc'?(a,b)=>b.price-a.price:(a,b)=>b.created-a.created);
+return `<h2 style="margin-top:8px">Машина издөө</h2>${filterBox(f)}<h2>Табылды: ${l.length}</h2><div class="cards">${l.map(card).join('')||'<p class="mu">Эч нерсе табылган жок.</p>'}</div>`}
+function wa(p){let d=p.replace(/\D/g,'');if(d.startsWith('0'))d='996'+d.slice(1);return d}
+function car(id){const c=db.Cars.find(x=>x.id==id);if(!c)return '<p>Жарыя табылган жок.</p>';const im=imgs(id),o=db.Users.find(u=>u.id==c.userId)||{};
+const sp=[['Марка',c.brand],['Модель',c.model],['Жылы',c.year],['Пробег',fmt(c.km)+' км'],['Мотор',c.engine+' л'],['Коробка',c.gear],['Күйүүчү май',c.fuel],['Кузов',c.body],['Түсү',c.color],['Шаар',c.city],['Абалы',c.cond]];
+return `<a class="mu" href="#/search">← Артка</a><div class="two" style="margin-top:12px"><div class="gal"><img class="m" id="mi" src="${im[0]?im[0].src:''}"><div class="th">${im.map(i=>`<img src="${i.src}" onclick="$('#mi').src=this.src">`).join('')}</div></div>
+<div><h1 style="margin:0">${esc(c.brand)} ${esc(c.model)}</h1><div class="pr" style="font-size:28px;color:var(--rd)">${fmt(c.price)} сом</div><div class="sp">${sp.map(s=>`<div><span class="mu">${s[0]}</span><br><b>${esc(s[1])}</b></div>`).join('')}</div>
+<h2 style="font-size:18px">Сатуучунун сүрөттөмөсү</h2><p style="white-space:pre-wrap">${esc(c.desc)}</p><p class="mu">Сатуучу: ${esc(o.name||'')}</p>
+<div class="call"><a class="btn dk" href="tel:${esc(c.phone)}">📞 Телефон чалуу</a><a class="btn" style="background:#16a34a" target="_blank" rel="noopener" href="https://wa.me/${wa(c.phone)}">💬 WhatsApp аркылуу жазуу</a></div></div></div>`}
+function reg(){return `<div class="auth box"><h2 style="margin-top:0">Катталуу</h2><div class="g"><div><label>Аты</label><input id="n"></div><div><label>Телефон номери</label><input id="p" type="tel" placeholder="0555 123 456"></div><div><label>Пароль</label><input id="pw" type="password"></div><button class="btn" onclick="doReg()">Катталуу</button><a class="mu" href="#/login">Аккаунтуңуз барбы? Кирүү</a></div></div>`}
+const np=p=>p.replace(/\D/g,'');
+function doReg(){const n=$('#n').value.trim(),p=np($('#p').value),pw=$('#pw').value;if(!n||p.length<9||pw.length<4)return toast('Аты, телефон жана пароль (мин. 4 белги) толтуруңуз');if(db.Users.some(u=>np(u.phone)==p))return toast('Бул номер катталган');const u={id:nid(),name:n,phone:p,password:pw,role:'user',blocked:false,created:Date.now()};db.Users.push(u);save();localStorage.setItem(SK,u.id);toast('Ийгиликтүү катталдыңыз!');location.hash='#/cab';route()}
+function login(){return `<div class="auth box"><h2 style="margin-top:0">Кирүү</h2><div class="g"><div><label>Телефон номери</label><input id="p" type="tel"></div><div><label>Пароль</label><input id="pw" type="password"></div><button class="btn" onclick="doLogin()">Кирүү</button><a class="mu" href="#/reg">Катталуу</a></div></div>`}
+function doLogin(){const u=db.Users.find(x=>np(x.phone)==np($('#p').value)&&x.password==$('#pw').value);if(!u)return toast('Номер же пароль туура эмес');if(u.blocked)return toast('Аккаунт бөгөттөлгөн');localStorage.setItem(SK,u.id);location.hash=u.role=='admin'?'#/admin':'#/cab';route()}
+let pend=[],editId=null;
+function addForm(id){const u=me();if(!u){toast('Жарыялоо үчүн кириңиз');return login()}
+const c=id?db.Cars.find(x=>x.id==id&&(x.userId==u.id||u.role=='admin')):{};if(id&&!c)return '<p>Табылган жок</p>';editId=id||null;pend=id?imgs(id).map(i=>i.src):[];
+const f=(k,l,t='text',x='')=>`<div><label>${l}</label><input id="a_${k}" type="${t}" value="${esc(c[k]||'')}" ${x}></div>`,s=(k,l,a)=>`<div><label>${l}</label><select id="a_${k}">${opt(a,c[k])}</select></div>`;
+setTimeout(prev,0);
+return `<h2 style="margin-top:8px">${id?'Жарыяны оңдоо':'Машина сатуу'}</h2><div class="box"><label>Сүрөттөр (1–15)</label><input type="file" accept="image/*" multiple onchange="pick(this)"><div class="pv" id="pv"></div><br><div class="g">
+<div><label>Марка</label><select id="a_brand" onchange="$('#a_model').innerHTML=opt(mods(this.value))">${opt(Object.keys(BM),c.brand)}</select></div>
+<div><label>Модель</label><select id="a_model">${opt(mods(c.brand||Object.keys(BM)[0]),c.model)}</select></div>
+${f('year','Жылы','number','min=1980 max=2027')}${f('price','Баасы (сом)','number')}${f('km','Пробег (км)','number')}${f('engine','Мотор көлөмү (л)','text')}
+${s('gear','Коробка',GEAR)}${s('fuel','Күйүүчү май',FUEL)}${s('body','Кузов',BODY)}${s('color','Түсү',COL)}${s('city','Шаар',CITIES)}${s('cond','Машинанын абалы',COND)}${f('phone','Телефон номери','tel')}</div>
+<br><label>Толук сүрөттөмө</label><textarea id="a_desc" rows="5">${esc(c.desc||'')}</textarea><br><br><button class="btn" onclick="publish()">${id?'Сактоо':'Жарыялоо'}</button></div>`}
+function prev(){const e=$('#pv');if(e)e.innerHTML=pend.map((s,i)=>`<div style="position:relative"><img src="${s}"><button class="fav" style="width:22px;height:22px;font-size:12px;top:2px;right:2px" onclick="pend.splice(${i},1);prev()">✕</button></div>`).join('')}
+function shrink(file){return new Promise(r=>{const im=new Image,fr=new FileReader;fr.onload=()=>{im.onload=()=>{const k=Math.min(1,720/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=im.width*k;cv.height=im.height*k;cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);r(cv.toDataURL('image/jpeg',.6))};im.src=fr.result};fr.readAsDataURL(file)})}
+async function pick(inp){for(const f of inp.files){if(pend.length>=15){toast('Максимум 15 сүрөт');break}pend.push(await shrink(f))}inp.value='';prev()}
+function publish(){const u=me(),g=k=>$('#a_'+k).value.trim(),d={};['brand','model','gear','fuel','body','color','city','cond','engine','desc','phone'].forEach(k=>d[k]=g(k));['year','price','km'].forEach(k=>d[k]=+g(k));
+if(!pend.length)return toast('Кеминде 1 сүрөт жүктөңүз');if(!d.year||!d.price||!d.phone||!d.engine||d.km<0||g('km')==='')return toast('Бардык талааларды толтуруңуз');
+const bk={Cars:JSON.stringify(db.Cars),Im:JSON.stringify(db.CarImages),seq:db.seq};let id=editId;
+if(id){Object.assign(db.Cars.find(x=>x.id==id),d,{status:u.role=='admin'?db.Cars.find(x=>x.id==id).status:'pending'});db.CarImages=db.CarImages.filter(i=>i.carId!=id)}else{id=nid();db.Cars.push({id,userId:u.id,...d,status:'pending',created:Date.now()})}
+pend.forEach(s=>db.CarImages.push({id:nid(),carId:id,src:s}));
+if(!save()){db.Cars=JSON.parse(bk.Cars);db.CarImages=JSON.parse(bk.Im);db.seq=bk.seq;return}
+toast('Жарыя жөнөтүлдү! Админ бекиткенден кийин чыгат.');location.hash='#/cab'}
+const st=s=>s=='approved'?'<span class="tag ok">Бекитилди</span>':s=='pending'?'<span class="tag pe">Текшерүүдө</span>':'<span class="tag bl">Четке кагылды</span>';
+function cab(){const u=me();if(!u)return login();const my=db.Cars.filter(c=>c.userId==u.id),fv=db.Favorites.filter(f=>f.userId==u.id).map(f=>db.Cars.find(c=>c.id==f.carId)).filter(Boolean);
+return `<div class="row"><h2 style="margin:8px auto 8px 0">Менин жарыяларым</h2><a class="btn" href="#/add">+ Машина кошуу</a></div>
+<div class="tw"><table>${my.map(c=>`<tr><td><a href="#/car/${c.id}"><b>${esc(c.brand)} ${esc(c.model)}</b></a><div class="mu">${c.year} • ${fmt(c.price)} сом</div></td><td>${st(c.status)}</td><td style="text-align:right"><a class="btn sm o" href="#/edit/${c.id}">Оңдоо</a> <button class="btn sm o" onclick="delCar(${c.id})">Өчүрүү</button></td></tr>`).join('')||'<tr><td class="mu">Жарыя жок</td></tr>'}</table></div>
+<h2>Сакталган машиналар</h2><div class="cards">${fv.map(card).join('')||'<p class="mu">Сакталган машина жок.</p>'}</div>`}
+function delCar(id){if(!confirm('Жарыяны өчүрөсүзбү?'))return;db.Cars=db.Cars.filter(c=>c.id!=id);db.CarImages=db.CarImages.filter(i=>i.carId!=id);db.Favorites=db.Favorites.filter(f=>f.carId!=id);save();route()}
+function setSt(id,s){db.Cars.find(c=>c.id==id).status=s;save();route()}
+function blk(id){const u=db.Users.find(x=>x.id==id);u.blocked=!u.blocked;save();route()}
+function admin(){const u=me();if(!u||u.role!='admin')return '<p>Кирүүгө уруксат жок. Админ катары кириңиз.</p>';
+const stat=[['Колдонуучулар',db.Users.length],['Жарыялар',db.Cars.length],['Текшерүүдө',db.Cars.filter(c=>c.status=='pending').length],['Бекитилген',db.Cars.filter(c=>c.status=='approved').length],['Сакталгандар',db.Favorites.length]];
+return `<h2 style="margin-top:8px">Админ панель</h2><div class="g">${stat.map(s=>`<div class="box"><div class="mu">${s[0]}</div><b style="font-size:26px">${s[1]}</b></div>`).join('')}</div>
+<h2>Жарыялар</h2><div class="tw"><table>${db.Cars.slice().reverse().map(c=>`<tr><td><a href="#/car/${c.id}"><b>${esc(c.brand)} ${esc(c.model)}</b></a><div class="mu">${fmt(c.price)} сом • ${esc((db.Users.find(x=>x.id==c.userId)||{}).name)}</div></td><td>${st(c.status)}</td><td style="text-align:right;white-space:nowrap"><button class="btn sm" onclick="setSt(${c.id},'approved')">Бекитүү</button> <button class="btn sm o" onclick="setSt(${c.id},'rejected')">Четке кагуу</button> <button class="btn sm o" onclick="delCar(${c.id})">Өчүрүү</button></td></tr>`).join('')}</table></div>
+<h2>Колдонуучулар</h2><div class="tw"><table>${db.Users.map(x=>`<tr><td><b>${esc(x.name)}</b><div class="mu">${esc(x.phone)} • ${x.role}</div></td><td>${x.blocked?'<span class="tag bl">Бөгөттөлгөн</span>':''}</td><td style="text-align:right">${x.role=='admin'?'':`<button class="btn sm o" onclick="blk(${x.id})">${x.blocked?'Бөгөттөн чыгаруу':'Блоктоо'}</button>`}</td></tr>`).join('')}</table></div>`}
+function route(){navb();const h=location.hash.slice(1)||'/',[p,q]=h.split('?'),m=p.split('/');let v;
+if(p=='/')v=home();else if(p=='/search')v=search(q||'');else if(m[1]=='car')v=car(m[2]);else if(p=='/reg')v=reg();else if(p=='/login')v=login();else if(p=='/add')v=addForm();else if(m[1]=='edit')v=addForm(+m[2]);else if(p=='/cab')v=cab();else if(p=='/admin')v=admin();else v=home();
+$('#app').innerHTML=v;scrollTo(0,0)}
+addEventListener('hashchange',route);route();
+</script></body></html>
